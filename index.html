@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ikot Manila — Fare Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <div class="header-eyebrow">Ikot Manila Transit Authority</div>
+    <h1 class="header-title">Fare <em>Calculator</em></h1>
+    <div class="header-rule"></div>
+  </header>
+
+  <main>
+    <div>
+      <div class="card">
+        <div class="card-label">Select line &amp; stations</div>
+
+        <div class="line-grid">
+          <button class="line-btn" data-line="lrt1" onclick="selectLine('lrt1')">
+            <span class="line-dot">L1</span>
+            <span>LRT 1</span>
+          </button>
+          <button class="line-btn" data-line="lrt2" onclick="selectLine('lrt2')">
+            <span class="line-dot">L2</span>
+            <span>LRT 2</span>
+          </button>
+          <button class="line-btn" data-line="mrt3" onclick="selectLine('mrt3')">
+            <span class="line-dot">M3</span>
+            <span>MRT 3</span>
+          </button>
+        </div>
+
+        <div class="station-row">
+          <div class="field-group" style="margin-bottom:0">
+            <label class="field-label">From</label>
+            <select id="fromStation">
+              <option value="">— Select —</option>
+            </select>
+          </div>
+          <button class="swap-btn" onclick="swapStations()" title="Swap stations">⇄</button>
+          <div class="field-group" style="margin-bottom:0">
+            <label class="field-label">To</label>
+            <select id="toStation">
+              <option value="">— Select —</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="calc-btn" onclick="calculateFare()">Compute Fare</button>
+
+        <div class="error-msg" id="errorMsg">Please select a railway line and both stations.</div>
+
+        <div class="station-map" id="stationMap">
+          <div class="station-map-label">Line overview</div>
+          <div class="station-dots" id="stationDots"></div>
+        </div>
+
+        <div class="fare-note">
+          <strong>Note:</strong> Fares are based on LRTA &amp; MRT-3 standard distance-based matrix. Beep card users enjoy a stored-value convenience discount.
+        </div>
+      </div>
+    </div>
+
+    <div class="result-panel" id="resultPanel">
+      <div class="card">
+        <div class="card-label">Trip summary</div>
+
+        <div class="station-route" id="stationRoute">
+          <div class="station-name" id="fromLabel">—</div>
+          <div class="route-arrow">
+            <div class="route-line"></div>
+            <div class="route-stops" id="stopsLabel">— stops</div>
+          </div>
+          <div class="station-name right" id="toLabel">—</div>
+        </div>
+
+        <div class="fare-display">
+          <div class="fare-currency">Philippine Peso</div>
+          <div class="fare-amount" id="fareAmount">0</div>
+          <div class="fare-label">Estimated Regular Fare</div>
+        </div>
+
+        <div class="trip-meta">
+          <div class="meta-row">
+            <span class="meta-key">Railway line</span>
+            <span class="meta-val line-tag" id="lineTag">—</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-key">Stations traversed</span>
+            <span class="meta-val" id="metaStations">—</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-key">Discounted fare (PWD/SR)</span>
+            <span class="meta-val" id="metaDisc">—</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-key">Beep card fare</span>
+            <span class="meta-val" id="metaBeep">—</span>
+          </div>
+        </div>
+
+        <div class="info-strip">Fare computed using 2024–2025 LRTA &amp; MRT-3 distance matrix</div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-rule"></div>
+    <div class="footer-text">
+      <span>Metro Rail Fare System</span>
+      <span>Data: LRTA · DOTC · MRT-3</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
