@@ -583,3 +583,11 @@
       .header-title { font-size: 32px; }
       .fare-amount { font-size: 56px; }
     }
+
+/* MOVE ALL YOUR CSS HERE */
+/* Your original CSS works fine */
+/* Just add this extra fix below */
+
+.no-margin {
+  margin-bottom: 0;
+}
