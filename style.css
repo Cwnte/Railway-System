@@ -1,7 +1,9 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #0e0e0e;
-  color: #e0e0e0;
+  /* Deep, warm silhouette black */
+  background-color: #070303; 
+  /* Soft amber-tinted white for readability without harsh contrast */
+  color: #f7e6d5; 
   margin: 0;
   padding: 0;
 }
@@ -10,15 +12,21 @@ body {
   max-width: 480px;
   margin: 80px auto;
   padding: 30px;
-  background-color: #1a1a1a;
+  /* Dark maroon-tinted charcoal representing the unlit cages */
+  background-color: #140806; 
+  /* Framed look like the structure of the cages */
+  border: 1px solid #3a150e; 
   border-radius: 12px;
-  box-shadow: 0 0 10px rgba(10, 10, 10, 0.8);
+  /* The signature ambient orange-red glow from the photo */
+  box-shadow: 0 0 25px rgba(255, 51, 0, 0.25), 0 0 50px rgba(255, 119, 0, 0.1);
 }
 
 h1, h2 {
   text-align: center;
   margin-bottom: 20px;
-  color: #e0e0e0;
+  /* High-intensity glowing yellow-orange */
+  color: #ffaa00;
+  text-shadow: 0 0 10px rgba(255, 102, 0, 0.6);
 }
 
 label {
@@ -26,52 +34,67 @@ label {
   margin-top: 20px;
   margin-bottom: 8px;
   font-weight: bold;
-  color: #e0e0e0;
+  /* Mid-tone vibrant orange */
+  color: #ff7722;
 }
 
 select {
   width: 100%;
   padding: 10px;
-  background-color: #121212;
-  border: 1px solid #2a2a2a;
-  color: #e0e0e0;
+  /* Inside of the container dark tones */
+  background-color: #0d0403;
+  border: 1px solid #4a1c13;
+  color: #f7e6d5;
   border-radius: 6px;
   font-size: 16px;
   outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 select:focus {
-  border-color: #ffffff;
+  border-color: #ffaa00;
+  box-shadow: 0 0 8px rgba(255, 170, 0, 0.4);
 }
 
 button {
   margin-top: 30px;
   width: 100%;
   padding: 12px;
-  background-color: #ffffff;
-  color: rgb(0, 0, 0);
+  /* The brightest glowing orange/red in the installation */
+  background-color: #ff4400;
+  /* Pure black text for that stark silhouette effect seen on the people */
+  color: #000000;
+  font-weight: bold;
   border: none;
   border-radius: 6px;
   font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(255, 68, 0, 0.4);
 }
 
 button:hover {
-  background-color: #ffffff;
+  /* Shifts to the brilliant incandescent yellow from the core of the lights */
+  background-color: #ffcc00;
+  box-shadow: 0 0 20px rgba(255, 204, 0, 0.7);
+  transform: translateY(-1px);
 }
 
 .result {
   margin-top: 30px;
-  background: #121212;
+  background: #1c0a07;
   padding: 20px;
   border-radius: 8px;
   font-size: 15px;
   line-height: 1.6;
+  /* Side accent line to mimic a glowing vertical edge */
+  border-left: 4px solid #ff5500;
 }
 
 .error {
-  color: #ff5c5c;
+  /* Pure, intense neon blood-red */
+  color: #ff2222;
   font-weight: bold;
   font-size: 16px;
+  text-shadow: 0 0 8px rgba(255, 34, 34, 0.4);
 }
