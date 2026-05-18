@@ -7,21 +7,608 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-  </head>
+  <style>
+    :root {
+      --crimson:       #710014;
+      --crimson-light: #9a001c;
+      --crimson-dim:   #3d000b;
+      --crimson-glow:  rgba(113, 0, 20, 0.18);
+      --sand:          #B38F6F;
+      --sand-light:    #c9a98a;
+      --sand-dim:      #7a5e44;
+      --pearl:         #F2F1ED;
+      --pearl-dim:     #d4d2cc;
+      --obsidian:      #161616;
+      --obsidian-mid:  #1f1f1f;
+      --obsidian-light:#2a2a2a;
+      --obsidian-card: #1c1c1c;
+      --text-primary:  #F2F1ED;
+      --text-muted:    #9b9088;
+      --text-dim:      #5e564e;
+      --border:        rgba(179, 143, 111, 0.12);
+      --border-hover:  rgba(179, 143, 111, 0.28);
+      --lrt1-color:    #c8502a;
+      --lrt2-color:    #6b3fa0;
+      --mrt3-color:    #2277cc;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--obsidian);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Subtle ambient background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 500px;
+      background: radial-gradient(ellipse at 50% 0%, rgba(113, 0, 20, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Header ── */
+    header {
+      width: 100%;
+      max-width: 960px;
+      padding: 48px 40px 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--sand-dim);
+      margin-bottom: 10px;
+    }
+
+    .header-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(34px, 5vw, 52px);
+      font-weight: 300;
+      color: var(--pearl);
+      line-height: 1.08;
+      letter-spacing: -0.01em;
+    }
+
+    .header-title em {
+      font-style: italic;
+      color: var(--sand);
+    }
+
+    .header-rule {
+      margin-top: 24px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--crimson) 0%, var(--sand-dim) 40%, transparent 100%);
+      opacity: 0.45;
+    }
+
+    /* ── Main layout ── */
+    main {
+      width: 100%;
+      max-width: 960px;
+      padding: 0 40px 80px;
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--obsidian-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      transition: border-color 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: var(--border-hover);
+    }
+
+    .card-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+    }
+
+    /* ── Line selector ── */
+    .line-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .line-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 8px;
+      background: var(--obsidian-mid);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .line-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.22s ease;
+    }
+
+    .line-btn[data-line="lrt1"]::after { background: radial-gradient(circle at 50% 0%, rgba(200, 80, 42, 0.14) 0%, transparent 70%); }
+    .line-btn[data-line="lrt2"]::after { background: radial-gradient(circle at 50% 0%, rgba(107, 63, 160, 0.14) 0%, transparent 70%); }
+    .line-btn[data-line="mrt3"]::after { background: radial-gradient(circle at 50% 0%, rgba(34, 119, 204, 0.14) 0%, transparent 70%); }
+
+    .line-btn:hover { border-color: var(--border-hover); color: var(--pearl-dim); transform: translateY(-1px); }
+    .line-btn:hover::after { opacity: 1; }
+
+    .line-btn.active { color: var(--pearl); transform: translateY(-1px); }
+    .line-btn[data-line="lrt1"].active { border-color: var(--lrt1-color); background: rgba(200, 80, 42, 0.08); }
+    .line-btn[data-line="lrt2"].active { border-color: var(--lrt2-color); background: rgba(107, 63, 160, 0.08); }
+    .line-btn[data-line="mrt3"].active { border-color: var(--mrt3-color); background: rgba(34, 119, 204, 0.08); }
+    .line-btn.active::after { opacity: 1; }
+
+    .line-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0;
+      flex-shrink: 0;
+      transition: all 0.22s ease;
+    }
+
+    .line-btn[data-line="lrt1"] .line-dot { background: rgba(200,80,42,0.18); color: var(--lrt1-color); }
+    .line-btn[data-line="lrt2"] .line-dot { background: rgba(107,63,160,0.18); color: var(--lrt2-color); }
+    .line-btn[data-line="mrt3"] .line-dot { background: rgba(34,119,204,0.18); color: var(--mrt3-color); }
+    .line-btn[data-line="lrt1"].active .line-dot { background: var(--lrt1-color); color: #fff; }
+    .line-btn[data-line="lrt2"].active .line-dot { background: var(--lrt2-color); color: #fff; }
+    .line-btn[data-line="mrt3"].active .line-dot { background: var(--mrt3-color); color: #fff; }
+
+    /* ── Form fields ── */
+    .field-group {
+      margin-bottom: 20px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+
+    select {
+      width: 100%;
+      padding: 13px 16px;
+      background: var(--obsidian-mid);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      outline: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235e564e' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      cursor: pointer;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    select:focus {
+      border-color: var(--sand-dim);
+      box-shadow: 0 0 0 3px rgba(179, 143, 111, 0.08);
+    }
+
+    select option { background: var(--obsidian-mid); }
+
+    /* Station swap row */
+    .station-row {
+      display: grid;
+      grid-template-columns: 1fr 36px 1fr;
+      gap: 8px;
+      align-items: end;
+      margin-bottom: 20px;
+    }
+
+    .swap-btn {
+      width: 36px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--obsidian-light);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      color: var(--text-dim);
+      font-size: 15px;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+      padding: 0;
+    }
+
+    .swap-btn:hover {
+      border-color: var(--sand-dim);
+      color: var(--sand);
+      transform: rotate(180deg);
+    }
+
+    /* ── Calculate button ── */
+    .calc-btn {
+      width: 100%;
+      padding: 15px 24px;
+      background: var(--crimson);
+      border: 1px solid var(--crimson-light);
+      border-radius: 10px;
+      color: var(--pearl);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .calc-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.07) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .calc-btn:hover {
+      background: var(--crimson-light);
+      box-shadow: 0 0 24px rgba(113,0,20,0.4), 0 4px 12px rgba(0,0,0,0.3);
+      transform: translateY(-1px);
+    }
+
+    .calc-btn:active { transform: translateY(0); }
+
+    /* ── Result panel ── */
+    .result-panel {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      pointer-events: none;
+    }
+
+    .result-panel.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+
+    .result-panel .card-label { margin-bottom: 28px; }
+
+    .fare-display {
+      text-align: center;
+      padding: 28px 0 32px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+
+    .fare-currency {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--sand);
+      margin-bottom: 4px;
+      letter-spacing: 0.08em;
+    }
+
+    .fare-amount {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 72px;
+      font-weight: 300;
+      color: var(--pearl);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .fare-label {
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+
+    .trip-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .meta-key {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .meta-val {
+      color: var(--pearl);
+      font-weight: 500;
+      text-align: right;
+      max-width: 60%;
+    }
+
+    .meta-val.line-tag {
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .meta-val.lrt1-tag { background: rgba(200,80,42,0.16); color: #d4815a; border: 1px solid rgba(200,80,42,0.3); }
+    .meta-val.lrt2-tag { background: rgba(107,63,160,0.16); color: #9b7ccc; border: 1px solid rgba(107,63,160,0.3); }
+    .meta-val.mrt3-tag { background: rgba(34,119,204,0.16); color: #6aaee8; border: 1px solid rgba(34,119,204,0.3); }
+
+    .station-route {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--obsidian-mid);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+    }
+
+    .station-name {
+      flex: 1;
+      font-size: 13px;
+      color: var(--pearl);
+      font-weight: 500;
+    }
+
+    .station-name.right { text-align: right; }
+
+    .route-arrow {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 0 4px;
+    }
+
+    .route-line {
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--sand-dim), var(--crimson));
+      opacity: 0.6;
+    }
+
+    .route-stops {
+      font-size: 9px;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ── Error ── */
+    .error-msg {
+      display: none;
+      background: rgba(113,0,20,0.12);
+      border: 1px solid rgba(113,0,20,0.3);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-top: 12px;
+      font-size: 13px;
+      color: #c87070;
+    }
+
+    .error-msg.show { display: block; }
+
+    /* ── Info strip at top of result ── */
+    .info-strip {
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Fare note ── */
+    .fare-note {
+      font-size: 10.5px;
+      color: var(--text-dim);
+      line-height: 1.55;
+      margin-top: 20px;
+      padding: 14px 16px;
+      background: rgba(179,143,111,0.04);
+      border-left: 2px solid var(--sand-dim);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .fare-note strong { color: var(--sand-dim); font-weight: 500; }
+
+    /* ── Footer ── */
+    footer {
+      width: 100%;
+      max-width: 960px;
+      padding: 0 40px 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-rule {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 20px;
+    }
+
+    .footer-text {
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* Station map preview */
+    .station-map {
+      margin-top: 20px;
+      padding: 16px;
+      background: var(--obsidian-mid);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: none;
+    }
+
+    .station-map.visible { display: block; }
+
+    .station-map-label {
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .station-dots {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .station-dots::-webkit-scrollbar { display: none; }
+
+    .s-dot-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .s-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: 1.5px solid var(--text-dim);
+      background: transparent;
+      flex-shrink: 0;
+    }
+
+    .s-dot.active {
+      background: var(--sand);
+      border-color: var(--sand);
+    }
+
+    .s-dot.in-route {
+      border-color: var(--sand-dim);
+      background: rgba(179,143,111,0.25);
+    }
+
+    .s-line {
+      height: 1.5px;
+      width: 18px;
+      background: var(--text-dim);
+      flex-shrink: 0;
+      align-self: center;
+      margin-top: -14px;
+    }
+
+    .s-name {
+      font-size: 7.5px;
+      color: var(--text-dim);
+      white-space: nowrap;
+      letter-spacing: 0.03em;
+      max-width: 32px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .s-name.active { color: var(--sand); font-weight: 600; }
+    .s-name.in-route { color: var(--sand-dim); }
+
+    @media (max-width: 720px) {
+      main { grid-template-columns: 1fr; padding: 0 20px 60px; }
+      header { padding: 32px 20px 24px; }
+      footer { padding: 0 20px 32px; }
+      .header-title { font-size: 32px; }
+      .fare-amount { font-size: 56px; }
+    }
+  </style>
+</head>
 <body>
- 
+
   <header>
     <div class="header-eyebrow">Metro Rail Transit Authority</div>
     <h1 class="header-title">Fare <em>Calculator</em></h1>
     <div class="header-rule"></div>
   </header>
- 
+
   <main>
     <!-- Left: Input panel -->
     <div>
       <div class="card">
         <div class="card-label">Select line &amp; stations</div>
- 
+
         <!-- Line selector -->
         <div class="line-grid">
           <button class="line-btn" data-line="lrt1" onclick="selectLine('lrt1')">
@@ -37,7 +624,7 @@
             <span>MRT 3</span>
           </button>
         </div>
- 
+
         <!-- From / To -->
         <div class="station-row">
           <div class="field-group" style="margin-bottom:0">
@@ -54,28 +641,28 @@
             </select>
           </div>
         </div>
- 
+
         <button class="calc-btn" onclick="calculateFare()">Compute Fare</button>
- 
+
         <div class="error-msg" id="errorMsg">Please select a railway line and both stations.</div>
- 
+
         <!-- Station mini-map -->
         <div class="station-map" id="stationMap">
           <div class="station-map-label">Line overview</div>
           <div class="station-dots" id="stationDots"></div>
         </div>
- 
+
         <div class="fare-note">
           <strong>Note:</strong> Fares are based on LRTA &amp; MRT-3 standard distance-based matrix. Beep card users enjoy a stored-value convenience discount.
         </div>
       </div>
     </div>
- 
+
     <!-- Right: Result panel -->
     <div class="result-panel" id="resultPanel">
       <div class="card">
         <div class="card-label">Trip summary</div>
- 
+
         <div class="station-route" id="stationRoute">
           <div class="station-name" id="fromLabel">—</div>
           <div class="route-arrow">
@@ -84,13 +671,13 @@
           </div>
           <div class="station-name right" id="toLabel">—</div>
         </div>
- 
+
         <div class="fare-display">
           <div class="fare-currency">Philippine Peso</div>
           <div class="fare-amount" id="fareAmount">0</div>
           <div class="fare-label">Estimated Regular Fare</div>
         </div>
- 
+
         <div class="trip-meta">
           <div class="meta-row">
             <span class="meta-key">Railway line</span>
@@ -109,12 +696,12 @@
             <span class="meta-val" id="metaBeep">—</span>
           </div>
         </div>
- 
+
         <div class="info-strip">Fare computed using 2024–2025 LRTA &amp; MRT-3 distance matrix</div>
       </div>
     </div>
   </main>
- 
+
   <footer>
     <div class="footer-rule"></div>
     <div class="footer-text">
@@ -122,5 +709,196 @@
       <span>Data: LRTA · DOTC · MRT-3</span>
     </div>
   </footer>
+
+  <script>
+    /* ─── Data ─── */
+    const railways = {
+      lrt1: {
+        label: "LRT 1",
+        stations: [
+          "Baclaran","EDSA","Libertad","Gil Puyat","Vito Cruz",
+          "Quirino","Pedro Gil","UN Avenue","Central","Carriedo",
+          "Doroteo Jose","Bambang","Tayuman","Blumentritt","Abad Santos",
+          "R. Papa","5th Avenue","Monumento","Balintawak","Roosevelt"
+        ],
+        fare: (diff) => {
+          if (diff === 0) return 0;
+          if (diff <= 4) return 15;
+          if (diff <= 7) return 20;
+          if (diff <= 11) return 25;
+          if (diff <= 14) return 28;
+          return 30;
+        }
+      },
+      lrt2: {
+        label: "LRT 2",
+        stations: [
+          "Antipolo","Marikina-Pasig","Santolan","Katipunan","Anonas",
+          "Cubao (Araneta)","Betty-Go Belmonte","Gilmore","J. Ruiz","V. Mapa",
+          "Pureza","Legarda","Recto"
+        ],
+        fare: (diff) => {
+          if (diff === 0) return 0;
+          if (diff <= 2) return 15;
+          if (diff <= 4) return 20;
+          if (diff <= 6) return 25;
+          if (diff <= 8) return 28;
+          return 30;
+        }
+      },
+      mrt3: {
+        label: "MRT 3",
+        stations: [
+          "North Avenue","Quezon Avenue","GMA-Kamuning","Araneta Center-Cubao",
+          "Santolan-Annapolis","Ortigas","Shaw Boulevard","Boni",
+          "Guadalupe","Buendia","Ayala","Magallanes","Taft Avenue"
+        ],
+        fare: (diff) => {
+          if (diff === 0) return 0;
+          if (diff <= 2) return 13;
+          if (diff <= 4) return 16;
+          if (diff <= 6) return 20;
+          if (diff <= 8) return 23;
+          if (diff <= 10) return 26;
+          return 28;
+        }
+      }
+    };
+
+    let currentLine = null;
+
+    /* ─── Line selection ─── */
+    function selectLine(line) {
+      currentLine = line;
+      document.querySelectorAll('.line-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector(`.line-btn[data-line="${line}"]`).classList.add('active');
+
+      const stations = railways[line].stations;
+      const fromSel = document.getElementById('fromStation');
+      const toSel = document.getElementById('toStation');
+
+      [fromSel, toSel].forEach(sel => {
+        sel.innerHTML = '<option value="">— Select station —</option>';
+        stations.forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = opt.textContent = s;
+          sel.appendChild(opt);
+        });
+      });
+
+      renderMiniMap(line, null, null);
+      document.getElementById('stationMap').classList.add('visible');
+      document.getElementById('errorMsg').classList.remove('show');
+    }
+
+    /* ─── Mini-map ─── */
+    function renderMiniMap(line, fromIdx, toIdx) {
+      const stations = railways[line].stations;
+      const container = document.getElementById('stationDots');
+      container.innerHTML = '';
+
+      stations.forEach((s, i) => {
+        if (i > 0) {
+          const ln = document.createElement('div');
+          ln.className = 's-line';
+          if (fromIdx !== null && toIdx !== null) {
+            const lo = Math.min(fromIdx, toIdx);
+            const hi = Math.max(fromIdx, toIdx);
+            if (i > lo && i <= hi) ln.style.background = 'var(--sand-dim)';
+          }
+          container.appendChild(ln);
+        }
+        const wrap = document.createElement('div');
+        wrap.className = 's-dot-wrap';
+        const dot = document.createElement('div');
+        const nm = document.createElement('div');
+
+        dot.className = 's-dot';
+        nm.className = 's-name';
+        nm.textContent = s;
+
+        if (fromIdx !== null && toIdx !== null) {
+          const lo = Math.min(fromIdx, toIdx);
+          const hi = Math.max(fromIdx, toIdx);
+          if (i === fromIdx || i === toIdx) {
+            dot.classList.add('active');
+            nm.classList.add('active');
+          } else if (i > lo && i < hi) {
+            dot.classList.add('in-route');
+            nm.classList.add('in-route');
+          }
+        }
+
+        wrap.appendChild(dot);
+        wrap.appendChild(nm);
+        container.appendChild(wrap);
+      });
+    }
+
+    /* ─── Swap ─── */
+    function swapStations() {
+      const f = document.getElementById('fromStation');
+      const t = document.getElementById('toStation');
+      const tmp = f.value;
+      f.value = t.value;
+      t.value = tmp;
+    }
+
+    /* ─── Calculate ─── */
+    function calculateFare() {
+      const errEl = document.getElementById('errorMsg');
+      const from = document.getElementById('fromStation').value;
+      const to = document.getElementById('toStation').value;
+
+      if (!currentLine || !from || !to) {
+        errEl.classList.add('show');
+        return;
+      }
+      errEl.classList.remove('show');
+
+      const stations = railways[currentLine].stations;
+      const fromIdx = stations.indexOf(from);
+      const toIdx = stations.indexOf(to);
+      const diff = Math.abs(toIdx - fromIdx);
+
+      const fare = railways[currentLine].fare(diff);
+      const disc = Math.ceil(fare * 0.8);
+      const beep = fare;
+
+      // Animate fare number
+      animateCount('fareAmount', fare);
+
+      document.getElementById('fromLabel').textContent = from;
+      document.getElementById('toLabel').textContent = to;
+      document.getElementById('stopsLabel').textContent = `${diff} stop${diff !== 1 ? 's' : ''}`;
+      document.getElementById('metaStations').textContent = diff + (diff !== 1 ? ' stations' : ' station');
+      document.getElementById('metaDisc').textContent = `₱${disc}`;
+      document.getElementById('metaBeep').textContent = `₱${beep} (stored value)`;
+
+      const tag = document.getElementById('lineTag');
+      tag.textContent = railways[currentLine].label;
+      tag.className = 'meta-val line-tag';
+      tag.classList.add(currentLine + '-tag');
+
+      renderMiniMap(currentLine, fromIdx, toIdx);
+
+      const panel = document.getElementById('resultPanel');
+      panel.classList.add('visible');
+    }
+
+    function animateCount(id, target) {
+      const el = document.getElementById(id);
+      const start = parseInt(el.textContent) || 0;
+      const duration = 500;
+      const startTime = performance.now();
+      function step(now) {
+        const t = Math.min((now - startTime) / duration, 1);
+        const ease = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.round(start + (target - start) * ease);
+        if (t < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+  </script>
 </body>
 </html>
